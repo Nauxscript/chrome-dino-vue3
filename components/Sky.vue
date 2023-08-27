@@ -1,21 +1,11 @@
 <script lang="ts" setup>
 import Cloud from './Cloud.vue'
+import { delay } from '@/utils'
 
 const cloud_1 = ref<InstanceType<typeof Cloud>>()
 const cloud_2 = ref<InstanceType<typeof Cloud>>()
 const cloud_3 = ref<InstanceType<typeof Cloud>>()
 const cloud_4 = ref<InstanceType<typeof Cloud>>()
-
-function delay(fn: () => void, sec = getRamdomByRange()) {
-  const timer = setTimeout(() => {
-    fn()
-    clearTimeout(timer)
-  }, sec * 1000)
-}
-
-function getRamdomByRange(min = 2, max = 6) {
-  return Math.floor(Math.random() * (max - min + 1)) + min
-}
 
 function checkCloud() {
   requestAnimationFrame(() => {
