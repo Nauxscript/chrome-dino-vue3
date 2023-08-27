@@ -11,7 +11,7 @@
   height: 20px;
   width: 100%;
   overflow: hidden;
-  margin: -25px;
+  margin-top: -25px;
 }
 
 .inner-pic {
