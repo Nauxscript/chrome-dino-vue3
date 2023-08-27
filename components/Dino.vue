@@ -14,6 +14,7 @@
   background-repeat: no-repeat;
   animation: dino-run .2s steps(1) infinite;
   transition: none;
+  margin-left: 20px;
 }
 
 @keyframes dino-run {
