@@ -1,24 +1,95 @@
 <script lang="ts" setup>
+enum GameState {
+  PAUSE = 'PAUSE',
+  UNSTART = 'UNSTART',
+  FAIL = 'FAIL',
+  RUNNING = 'RUNNING',
+}
 const stageRef = ref<HTMLDivElement>()
-
+const gameState = ref<GameState>(GameState.UNSTART)
 function handlePause() {
   if (!stageRef.value)
     return
   stageRef.value.classList.add('pause')
+  gameState.value = GameState.PAUSE
 }
 
-function handlePlay() {
+function handleStart() {
+  handleRestart()
+  stageRef.value!.classList.remove('unstart')
+}
+
+function handleRestart() {
   if (!stageRef.value)
     return
   stageRef.value.classList.remove('pause')
+  gameState.value = GameState.RUNNING
 }
+
+function handleSpaceDown(event: KeyboardEvent) {
+  if (event.code === 'Space') {
+    // eslint-disable-next-line no-console
+    console.log('space down')
+    if (!stageRef.value)
+      return
+    if (stageRef.value.classList.contains('unstart'))
+      handleStart()
+    // document.removeEventListener('keydown', handleSpaceDown)
+    // for test
+    // setTimeout(() => {
+    //   handlePause()
+    // }, 5000)
+  }
+}
+
+function addSpaceDownListener() {
+  document.addEventListener('keydown', handleSpaceDown)
+}
+
+function removeSpaceDownListener() {
+  document.removeEventListener('keydown', handleSpaceDown)
+}
+
+function addPageVisibleListener() {
+  if (typeof document.hidden === 'undefined')
+    document.addEventListener('visibilitychange', onVisibilityChange)
+}
+
+function removePageVisibleListener() {
+  if (typeof document.hidden === 'undefined')
+    return
+  document.removeEventListener('visibilitychange', onVisibilityChange)
+}
+
+function onVisibilityChange() {
+  if (gameState.value === GameState.UNSTART)
+    return
+  if (document.hidden) {
+    handlePause()
+  }
+  else {
+    setTimeout(() => {
+      handleStart()
+    }, 200)
+  }
+}
+
+onMounted(() => {
+  addPageVisibleListener()
+  addSpaceDownListener()
+})
+
+onUnmounted(() => {
+  removePageVisibleListener()
+  removeSpaceDownListener()
+})
 </script>
 
 <template>
-  <div ref="stageRef" class="stage pause">
+  <div ref="stageRef" class="stage pause unstart">
     <div class="modal">
       <div class="tip" />
-      <button @click="handlePlay" />
+      <button @click="handleRestart" />
     </div>
     <Sky />
     <Dino />
@@ -40,10 +111,20 @@ function handlePlay() {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 888;
 }
 
-.pause .modal {
+.fail .pause {
   display: flex;
+}
+
+.unstart .modal {
+  display: none;
+}
+
+.unstart .ground {
+  width: 128px;
+  overflow: hidden;
 }
 
 .tip {
@@ -60,6 +141,10 @@ button {
   height: 64px;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABAAgMAAADE0Nm5AAAACVBMVEX////39/dTU1OabbyfAAAAAXRSTlMAQObYZgAAAGNJREFUeF7d1CEOwDAMQ9GS3q/ExPcz8Sm3gYBWVRo0afvwSQl0ax1To22JntKWupfGjriSXiLViCXCmXBHCykJTxaYEeIQGcVrHYklcoX8YYpSUggzcpBTiv5JtQWorUltmS6s4ZKtz2GgjAAAAABJRU5ErkJggg==);
   background-repeat: no-repeat;
+}
+
+.unstart {
+
 }
 </style>
 
