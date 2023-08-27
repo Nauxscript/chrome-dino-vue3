@@ -1,10 +1,13 @@
 <script lang="ts" setup>
+import { delay } from '@/utils'
+
 enum GameState {
   PAUSE = 'PAUSE',
   UNSTART = 'UNSTART',
   FAIL = 'FAIL',
   RUNNING = 'RUNNING',
 }
+
 const stageRef = ref<HTMLDivElement>()
 const gameState = ref<GameState>(GameState.UNSTART)
 function handlePause() {
@@ -51,12 +54,12 @@ function removeSpaceDownListener() {
 }
 
 function addPageVisibleListener() {
-  if (typeof document.hidden === 'undefined')
+  if (typeof document.hidden !== 'undefined')
     document.addEventListener('visibilitychange', onVisibilityChange)
 }
 
 function removePageVisibleListener() {
-  if (typeof document.hidden === 'undefined')
+  if (typeof document.hidden !== 'undefined')
     return
   document.removeEventListener('visibilitychange', onVisibilityChange)
 }
@@ -68,11 +71,16 @@ function onVisibilityChange() {
     handlePause()
   }
   else {
-    setTimeout(() => {
+    delay(() => {
       handleStart()
-    }, 200)
+    }, 0.2)
   }
 }
+
+watch(gameState, (val) => {
+  // eslint-disable-next-line no-console
+  console.log(val)
+})
 
 onMounted(() => {
   addPageVisibleListener()
