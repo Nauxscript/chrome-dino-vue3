@@ -6,7 +6,7 @@ const online = useOnline()
   <div>
     <Suspense>
       <ClientOnly>
-        <Dino v-if="online" />
+        <Stage v-if="online" />
         <div v-else text-gray:80>
           You're offline
         </div>
