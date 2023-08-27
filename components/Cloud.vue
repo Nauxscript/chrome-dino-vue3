@@ -6,13 +6,18 @@ const restart = useThrottleFn(() => {
   console.log('restart')
   if (!cloud.value)
     return
-  // console.log(cloud.value)
+
+  reloadTop()
   if (cloud.value.classList.contains('move'))
     cloud.value.className = 'cloud move-again'
 
   else
     cloud.value.className = 'cloud move'
 })
+
+function reloadTop() {
+  cloud.value!.style.top = `${Math.floor(Math.random() * 71)}px`
+}
 
 function isStop() {
   if (!cloud.value)
@@ -40,6 +45,7 @@ defineExpose({
 
 <style scoped>
 .cloud {
+  position: absolute;
   width: 100%;
   height: 28px;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFwAAAAcAgMAAACR2TCnAAAABlBMVEUAAADa2to4qB92AAAAAXRSTlMAQObYZgAAAFFJREFUeF6VzTEKAFEIxNA03m+a3P8q2wqi/E35BIdeGXq3q5hnrwBs7mC5vIZzu/nnqI319vRtqHB731blwSHjx+22+Rdn94rzQq0ugKPVlz5onyJcGdu0NgAAAABJRU5ErkJggg==);
